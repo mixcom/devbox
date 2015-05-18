@@ -1,0 +1,8 @@
+#!/bin/sh
+CONTAINERS=`docker ps -a -q --filter "name=devbox-*"`
+if [ ! -z "$CONTAINERS" ]; then
+  echo "Killing and removing all existing Devbox Docker containers:"
+  docker rm -f $(docker ps -a -q --filter "name=devbox-*")
+else
+  echo "No Devbox Docker containers are running."
+fi
