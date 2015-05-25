@@ -1,0 +1,17 @@
+#!/bin/sh
+
+DEFAULTS=/etc/mysql/my.cnf
+
+exec 2>&1
+
+if [ ! -d "/var/lib/mysql" ]; then
+  mkdir /var/lib/mysql
+	chown -R mysql:mysql /var/lib/mysql
+fi
+
+# prepopulate the DB if no DB files are present
+if [ ! -d "/var/lib/mysql/mysql" ]; then
+	/usr/bin/mysql_install_db --defaults-file=$DEFAULTS
+fi
+
+exec /usr/bin/mysqld_safe --defaults-file=$DEFAULTS > /dev/null

@@ -1,0 +1,6 @@
+#!/bin/sh
+RESULT=`netstat -anp | grep 9000 | grep LISTEN`
+if [ "$RESULT" = "" ]; then
+        exit 1
+fi
+exit 0

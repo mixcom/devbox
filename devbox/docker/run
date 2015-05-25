@@ -6,42 +6,25 @@ realpath() {
 
 CMDDIR=`dirname $0`
 
-if [ "$#" -ne 3 ]; then
+if [ "$#" -ne 1 ]; then
   if [ "$#" -ne 0 ]; then
-    echo "Usage: $0 WWWDIR DATADIR SCRATCHDIR" >&2
+    echo "Usage: $0 devboxdir" >&2
     echo "   or: $0" >&2
     exit 1
   else
-    WWWDIR="$CMDDIR/../.."
-    DATADIR="$WWWDIR/data"
-    SCRATCHDIR="$WWWDIR/scratch"
+    ROOTDIR="$CMDDIR/../.."
   fi
 else
-  WWWDIR=$1
-  DATADIR=$2
-  SCRATCHDIR=$3
+  ROOTDIR="$1"
 fi
 
-WWWDIR=`realpath "$WWWDIR"`
-DATADIR=`realpath "$DATADIR"`
-SCRATCHDIR=`realpath "$SCRATCHDIR"`
-
-SITESDIR="$WWWDIR/sites"
-MYSQLDIR="$DATADIR/mysql"
-
-if ! [ -d "$SITESDIR" ]; then
-  echo "Creating directory $SITESDIR"
-  mkdir -p $SITESDIR
-fi
+ROOTDIR=`realpath "$ROOTDIR"`
+SITESDIR="$ROOTDIR/sites"
+MYSQLDIR="$ROOTDIR/data/mysql"
 
 if ! [ -d "$MYSQLDIR" ]; then
   echo "Creating directory $MYSQLDIR"
   mkdir -p $MYSQLDIR
-fi
-
-if ! [ -d "$SCRATCHDIR" ]; then
-  echo "Creating directory $SCRATCHDIR"
-  mkdir -p $SCRATCHDIR
 fi
 
 $CMDDIR/kill
@@ -53,7 +36,7 @@ docker run -d --name devbox-mysql -v $MYSQLDIR:/var/lib/mysql -p 3306:3306 mixco
 echo "- Memcached:"
 docker run -d --name devbox-memcache memcached
 echo "- PHP 5.6:"
-docker run -d --name devbox-php -v $WWWDIR:/var/www -v $SCRATCHDIR:/var/scratch --link devbox-memcache:memcache --link devbox-mysql:mysql mixcom/devbox-php-5.6
+docker run -d --name devbox-php -v $ROOTDIR:/devbox -v $SITESDIR:/var/www/sites --link devbox-memcache:memcache --link devbox-mysql:mysql mixcom/devbox-php-5.6
 echo "- Apache 2.4:"
-docker run -d --name devbox-apache -v $WWWDIR:/var/www --link devbox-php:php -p 80:80 mixcom/devbox-apache-2.4
+docker run -d --name devbox-apache -v $ROOTDIR:/var/www --link devbox-php:php -p 80:80 mixcom/devbox-apache-2.4
 echo "Started all Docker containers."
