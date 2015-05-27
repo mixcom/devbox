@@ -6,20 +6,35 @@ services:
   application:
     class: Symfony\Component\Console\Application
     arguments: ["%application.name%", "%application.version%"]
-    tags:
-      - { name: extension.socket, type: command, method: add }
-  
+    calls:
+      - [add, ["@site.command.clone"]]
+      - [add, ["@site.command.install"]]
+      - [add, ["@site.command.setup"]]
+      
   site.command.clone:
     class: Devbot\Plugins\Site\Console\Command\CloneCommand
-    tags:
-      - { name: extension.plugin, type: command }
+    arguments: ["@site.task.gitClone"]
+    
+  site.task.gitClone:
+    class: Devbot\Plugins\Site\Task\GitCloneTask
   
   site.command.install:
     class: Devbot\Plugins\Site\Console\Command\InstallCommand
-    tags:
-      - { name: extension.plugin, type: command }
+    arguments: ["@site.task.install"]
+    
+  site.task.install:
+    class: Devbot\Plugins\Site\Task\InstallTask
   
   site.command.setup:
     class: Devbot\Plugins\Site\Console\Command\SetupCommand
-    tags:
-      - { name: extension.plugin, type: command }
+    arguments: ["@site.task.setup"]
+    
+  site.task.setup:
+    class: Devbot\Plugins\Site\Task\SetupTask
+    calls:
+      - [setGitCloneTask, ["@site.task.gitClone"]]
+      - [setInstallTask, ["@site.task.install"]]
+  
+  drupal.installer.db:
+    class: Devbot\Plugins\Drupal\Installer\DbInstaller
+

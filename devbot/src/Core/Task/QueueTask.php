@@ -19,15 +19,30 @@ class QueueTask extends Task
         return $this;
     }
     
-    function __construct(array $tasks, LoggerInterface $logger = null)
+    public function getTasks()
     {
-        parent::__construct($logger);
+        return $this->tasks;
+    }
+    
+    public function addTask(TaskInterface $task)
+    {
+        $this->tasks[] = $task;
+        return $this;
+    }
+    
+    public function setTasks(array $tasks)
+    {
+        $this->tasks = [];
         foreach ($tasks as $task) {
-            if (!$task instanceof TaskInterface) {
-                throw new \InvalidArgumentException("All tasks should implement TaskInterface");
-            }
+            $this->addTask($task);
         }
-        $this->tasks = $tasks;
+        return $this;
+    }
+    
+    public function __construct()
+    {
+        parent::__construct();
+        $this->setTasks([]);
     }
     
     public function run()

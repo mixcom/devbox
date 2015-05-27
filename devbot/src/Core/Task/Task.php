@@ -19,11 +19,9 @@ abstract class Task implements TaskInterface
         return $this;
     }
     
-    public function __construct(LoggerInterface $logger = null)
+    public function __construct()
     {
-        if ($logger === null) {
-            $logger = new NullLogger;
-        }
+        $logger = new NullLogger;
         $this->setLogger($logger);
     }
 }

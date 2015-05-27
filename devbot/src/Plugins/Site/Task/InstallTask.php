@@ -1,9 +1,6 @@
 <?php
 namespace Devbot\Plugins\Site\Task;
 
-use Symfony\Component\Process\ProcessBuilder;
-use Symfony\Component\Process\Process;
-use Psr\Log\LoggerInterface;
 use Devbot\Core\Task\Task;
 
 class InstallTask extends Task
@@ -14,6 +11,12 @@ class InstallTask extends Task
     public function getDirectory()
     {
         return $this->directory;
+    }
+    
+    public function setDirectory($directory)
+    {
+        $this->directory = $directory;
+        return $this;
     }
     
     public function getForce()
@@ -27,10 +30,11 @@ class InstallTask extends Task
         return $this;
     }
     
-    public function __construct($directory, LoggerInterface $logger = null)
+    protected function validate()
     {
-        parent::__construct($logger);
-        $this->directory = $directory;
+        if (!isset ($this->directory)) {
+            throw new \LogicException('No directory set');
+        }
     }
     
     public function run()

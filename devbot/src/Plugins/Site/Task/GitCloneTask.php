@@ -11,7 +11,7 @@ class GitCloneTask extends Task
     protected $source;
     protected $target;
     
-    public static function autoTarget($source, $dir)
+    public function autoTarget($source, $dir)
     {
         $basename = basename($source, '.git');
         return $dir . DIRECTORY_SEPARATOR . $basename;
@@ -22,20 +22,37 @@ class GitCloneTask extends Task
         return $this->source;
     }
     
+    public function setSource($source)
+    {
+        $this->source = $source;
+        return $this;
+    }
+    
     public function getTarget()
     {
         return $this->target;
     }
     
-    public function __construct($source, $target, LoggerInterface $logger = null)
+    public function setTarget($target)
     {
-        parent::__construct($logger);
-        $this->source = $source;
         $this->target = $target;
+        return $this;
+    }
+    
+    protected function validate()
+    {
+        if (!isset ($this->source)) {
+            throw new \LogicException('No source set');
+        }
+        if (!isset ($this->target)) {
+            throw new \LogicException('No target set');
+        }
     }
     
     public function run()
     {
+        $this->validate();
+        
         if (file_exists($this->target)) {
             $this->logger->warning('Directory {target} already exists, doing nothing', [
                 'target' => $this->target,

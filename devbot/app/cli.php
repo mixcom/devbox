@@ -11,9 +11,6 @@ $container = new ContainerBuilder();
 $loader = new YamlFileLoader($container, new FileLocator(__DIR__));
 $loader->load('services.yml');
 
-$container->addCompilerPass(new DependencyLoaderCompilerPass);
-$container->compile();
-
 $application = $container->get('application');
 $application->run();
 
