@@ -1,0 +1,25 @@
+parameters:
+  application.name: DEVBOT
+  application.version: 0.1
+
+services:
+  application:
+    class: Symfony\Component\Console\Application
+    arguments: ["%application.name%", "%application.version%"]
+    tags:
+      - { name: extension.socket, type: command, method: add }
+  
+  site.command.clone:
+    class: Devbot\Plugins\Site\Console\Command\CloneCommand
+    tags:
+      - { name: extension.plugin, type: command }
+  
+  site.command.install:
+    class: Devbot\Plugins\Site\Console\Command\InstallCommand
+    tags:
+      - { name: extension.plugin, type: command }
+  
+  site.command.setup:
+    class: Devbot\Plugins\Site\Console\Command\SetupCommand
+    tags:
+      - { name: extension.plugin, type: command }

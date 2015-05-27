@@ -1,0 +1,22 @@
+{
+    "name": "mixcom/devbot",
+    "type": "library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Sebastiaan Besselsen",
+            "email": "sebastiaan.besselsen@gmail.com"
+        }
+    ],
+    "require": {
+        "symfony/console": "^2.6",
+        "symfony/process": "^2.6",
+        "psr/log": "^1.0",
+        "symfony/dependency-injection": "^2.6",
+        "symfony/config": "^2.6",
+        "symfony/yaml": "^2.6"
+    },
+    "autoload": {
+        "psr-4": {"Devbot\\": "src/"}
+    }
+}
