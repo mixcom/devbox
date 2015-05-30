@@ -1,5 +1,5 @@
 <?php
-namespace Devbot\Metadata;
+namespace Devbot\Core\Metadata;
 
 class Metadata
 {
@@ -29,8 +29,8 @@ class Metadata
     
     public function writeToFile($path)
     {
-        $data = $this->jsonData();
-        self::writeRawArrayToFile($path, $data);
+        $data = $this->_jsonData();
+        self::_writeRawArrayToFile($path, $data);
     }
     
     public function writeToDirectory($directory)
@@ -41,22 +41,17 @@ class Metadata
     
     public static function readFromFile($path)
     {
-        $data = self::readRawArrayFromFile($path);
-        return self::objectFromJSONData($data);
+        $data = self::_readRawArrayFromFile($path);
+        return self::_objectFromJSONData($data);
     }
     
     public static function readFromDirectory($directory)
     {
         $path = self::metadataPathForDirectory($$directory);
-        return self::readFromFile($path);
+        return self::_readFromFile($path);
     }
     
-    public static function metadataPathForDirectory($path)
-    {
-        return $path . DIRECTORY_SEPARATOR . DEFAULT_FILE_NAME;
-    }
-    
-    private function jsonData()
+    private function _jsonData()
     {
         $data = [];
         
@@ -65,13 +60,18 @@ class Metadata
         return $data;
     }
     
-    private static function writeRawArrayToFile($path, $data)
+    public static function metadataPathForDirectory($path)
+    {
+        return $path . DIRECTORY_SEPARATOR . DEFAULT_FILE_NAME;
+    }
+    
+    private static function _writeRawArrayToFile($path, $data)
     {
         $bytes = json_encode($data);
         file_put_contents($path, $bytes);
     }
     
-    private static function readRawArrayFromFile($path)
+    private static function _readRawArrayFromFile($path)
     {
         if (!file_exists($path)) {
             throw new \InvalidArgumentException("Path {$path} does not exist");
@@ -82,18 +82,22 @@ class Metadata
         $jsonData = file_get_contents($path);
         $data = json_decode($jsonData, true);
         if ($data === null) {
-            throw new \UnexpectedValueException("Found invalid JSON data in {$path}: " . json_last_error_msg());
+            throw new \UnexpectedValueException(
+                "Found invalid JSON data in {$path}: " . json_last_error_msg()
+            );
         }
         return $data;
     }
     
-    private static function objectFromJSONData($data)
+    private static function _objectFromJSONData($data)
     {
         $obj = new self;
         
         if (isset ($data['extra'])) {
             if (!is_array($data['extra'])) {
-                throw new \UnexpectedValueException("Metadata 'extra' key should contain an array or an object");
+                throw new \UnexpectedValueException(
+                    "Metadata 'extra' key should contain an array or an object"
+                );
             }
             $obj->extra = $data['extra'];
         }

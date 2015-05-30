@@ -9,32 +9,50 @@ services:
     calls:
       - [add, ["@site.command.clone"]]
       - [add, ["@site.command.install"]]
+      - [add, ["@site.command.archive"]]
       - [add, ["@site.command.setup"]]
       
   site.command.clone:
     class: Devbot\Plugins\Site\Console\Command\CloneCommand
-    arguments: ["@site.task.gitClone"]
+    calls:
+      - [setCloner, ["@site.clone.gitCloner"]]
     
-  site.task.gitClone:
-    class: Devbot\Plugins\Site\Task\GitCloneTask
+  site.clone.gitCloner:
+    class: Devbot\Plugins\Site\VcsClone\GitCloner
   
   site.command.install:
     class: Devbot\Plugins\Site\Console\Command\InstallCommand
-    arguments: ["@site.task.install"]
-    
-  site.task.install:
-    class: Devbot\Plugins\Site\Task\InstallTask
+    calls:
+      - [setInstaller, ["@site.installer"]]
+  
+  site.command.archive:
+    class: Devbot\Plugins\Site\Console\Command\ArchiveCommand
+    calls:
+      - [setInstaller, ["@site.installer"]]
   
   site.command.setup:
     class: Devbot\Plugins\Site\Console\Command\SetupCommand
-    arguments: ["@site.task.setup"]
-    
-  site.task.setup:
-    class: Devbot\Plugins\Site\Task\SetupTask
     calls:
-      - [setGitCloneTask, ["@site.task.gitClone"]]
-      - [setInstallTask, ["@site.task.install"]]
+      - [setCloner, ["@site.clone.gitCloner"]]
+      - [setInstaller, ["@site.installer"]]
   
-  drupal.installer.db:
-    class: Devbot\Plugins\Drupal\Installer\DbInstaller
+  site.installer:
+    class: Devbot\Plugins\Site\Install\SiteInstaller
+    calls:
+      - [setArchiveCompressor, ["@site.install.archiveCompressor"]]
+      - [addPlugin, ["public-symlink", "@site.install.publicSymlink"]]
+      - [addPlugin, ["public-symlink", "@site.install.htaccessTemplate"]]
+      - [addPlugin, ["drupal-files", "@drupal.install.files"]]
+  
+  site.install.publicSymlink:
+    class: Devbot\Plugins\Site\Install\Plugin\PublicSymlink
+  
+  site.install.htaccessTemplate:
+    class: Devbot\Plugins\Site\Install\Plugin\HtaccessTemplate
+  
+  site.install.archiveCompressor:
+    class: Devbot\Install\ArchiveZipCompressor
+    
+  drupal.install.files:
+    class: Devbot\Plugins\Drupal\Install\Plugin\Files
 

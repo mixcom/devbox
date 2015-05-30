@@ -3,7 +3,6 @@
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Loader\YamlFileLoader;
-use Devbot\Core\DependencyLoaderCompilerPass;
 
 require __DIR__ . '/../vendor/autoload.php';
 
