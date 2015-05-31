@@ -13,6 +13,11 @@ class Files extends AbstractPlugin
 {
     const DEFAULT_FILES_DIRECTORY = 'public/sites/default/files';
     
+    public function getPluginId()
+    {
+        return 'drupal-files';
+    }
+    
     public function archive(PluginEnvironment $env)
     {
         if (!$this->isSupportedDrupalVersion($env)) {

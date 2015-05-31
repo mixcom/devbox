@@ -11,6 +11,11 @@ class HtaccessTemplate extends AbstractPlugin
     const SOURCE_FILE = 'public/.htaccess.tpl';
     const TARGET_FILE = 'public/.htaccess';
     
+    public function getPluginId()
+    {
+        return 'htaccess-template';
+    }
+    
     public function install(PluginEnvironment $env)
     {
         $this->copyHtaccessTemplate($env->getSiteFilesystem());

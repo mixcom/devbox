@@ -9,6 +9,11 @@ use Symfony\Component\Process\ProcessBuilder;
 
 class PublicSymlink extends AbstractPlugin
 {
+    public function getPluginId()
+    {
+        return 'public-symlink';
+    }
+    
     public function install(PluginEnvironment $env)
     {
         $this->createPublicSymlink($env->getSiteDirectory());

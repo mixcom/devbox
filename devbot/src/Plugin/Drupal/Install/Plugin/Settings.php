@@ -10,6 +10,11 @@ class Settings extends AbstractPlugin
     const DEFAULT_SETTINGS_FILE = 'public/sites/default/settings.php';
     const DEFAULT_SETTINGS_TEMPLATE = 'public/sites/default/default.settings.php';
     
+    public function getPluginId()
+    {
+        return 'drupal-settings';
+    }
+    
     public function install(PluginEnvironment $env)
     {
         if (!$this->isSupportedDrupalVersion($env)) {

@@ -40,9 +40,9 @@ services:
     class: Devbot\Site\Install\SiteInstaller
     calls:
       - [setArchiveCompressor, ["@site.install.archiveCompressor"]]
-      - [addPlugin, ["public-symlink", "@site.install.publicSymlink"]]
-      - [addPlugin, ["htaccess-template", "@site.install.htaccessTemplate"]]
-      - [addPlugin, ["drupal-files", "@drupal.install.files"]]
+      - [addPlugin, ["@site.install.publicSymlink"]]
+      - [addPlugin, ["@site.install.htaccessTemplate"]]
+      - [addPlugin, ["@drupal.install.files"]]
   
   site.install.publicSymlink:
     class: Devbot\Site\Install\Plugin\PublicSymlink

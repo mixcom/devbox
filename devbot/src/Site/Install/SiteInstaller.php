@@ -27,15 +27,16 @@ class SiteInstaller extends AbstractInstaller
     public function setPlugins(array $plugins)
     {
         $this->plugins = [];
-        foreach ($plugins as $id => $plugin) {
-            $this->addPlugin($id, $plugin);
+        foreach ($plugins as $plugin) {
+            $this->addPlugin($plugin);
         }
         return $this;
     }
     
-    public function addPlugin($id, PluginInterface $plugin)
+    public function addPlugin(PluginInterface $plugin)
     {
-        $this->plugins[$id] = $plugin;
+        $id = $plugin->getPluginId();
+        $this->plugins[] = $plugin;
     }
     
     public function setArchiveCompressor(ArchiveCompressorInterface $compressor)
@@ -102,7 +103,9 @@ class SiteInstaller extends AbstractInstaller
     
     protected function invokePlugins($method)
     {
-        foreach ($this->plugins as $id => $plugin) {
+        foreach ($this->plugins as $plugin) {
+            $id = $plugin->getPluginId();
+            
             $this->logger->info('Running {plugin}', ['plugin' => $id]);
             
             $env = $this->getPluginEnvironment($id);
