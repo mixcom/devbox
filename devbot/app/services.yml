@@ -42,6 +42,7 @@ services:
       - [setArchiveCompressor, ["@site.install.archiveCompressor"]]
       - [addPlugin, ["@site.install.publicSymlink"]]
       - [addPlugin, ["@site.install.htaccessTemplate"]]
+      - [addPlugin, ["@drupal.install.settings"]]
       - [addPlugin, ["@drupal.install.files"]]
   
   site.install.publicSymlink:
@@ -52,6 +53,9 @@ services:
   
   site.install.archiveCompressor:
     class: Devbot\Install\ArchiveZipCompressor
+    
+  drupal.install.settings:
+    class: Devbot\Plugin\Drupal\Install\Plugin\Settings
     
   drupal.install.files:
     class: Devbot\Plugin\Drupal\Install\Plugin\Files
