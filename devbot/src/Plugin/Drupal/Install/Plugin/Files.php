@@ -1,6 +1,7 @@
 <?php
 namespace Devbot\Plugin\Drupal\Install\Plugin;
 
+use Devbot\Plugin\Drupal\VersionDetector as DrupalVersionDetector;
 use Devbot\Install\Filesystem\Helper as FilesystemHelper;
 use Devbot\Install\Plugin\AbstractPlugin;
 use Devbot\Install\Plugin\PluginEnvironment;
@@ -11,6 +12,10 @@ class Files extends AbstractPlugin
     
     public function archive(PluginEnvironment $env)
     {
+        if (!$this->isSupportedDrupalVersion($env)) {
+            return;
+        }
+        
         $fs = $env->getMountManager();
         $fsHelper = new FilesystemHelper($fs);
         
@@ -19,12 +24,17 @@ class Files extends AbstractPlugin
         $target = PluginEnvironment::PREFIX_DUMP . '://';
         
         if ($fs->has($source)) {
+            $this->logger->info('Archiving Drupal user files');
             $fsHelper->copyDirectory($source, $target);
         }
     }
     
     public function install(PluginEnvironment $env)
     {
+        if (!$this->isSupportedDrupalVersion($env)) {
+            return;
+        }
+        
         $fs = $env->getMountManager();
         $fsHelper = new FilesystemHelper($fs);
         
@@ -32,6 +42,30 @@ class Files extends AbstractPlugin
         $source = PluginEnvironment::PREFIX_DUMP . '://';
         $target = PluginEnvironment::PREFIX_SITE . '://' . $prefix;
         
+        $this->logger->info('Copying Drupal user files');
+        
         $fsHelper->copyDirectory($source, $target);
+    }
+    
+    protected function isSupportedDrupalVersion(PluginEnvironment $env)
+    {
+        $versionDetector = new DrupalVersionDetector();
+        $version = $versionDetector->detectMajorVersion($env->getSiteFilesystem());
+        
+        switch ($version) {
+            case DrupalVersionDetector::VERSION_6:
+            case DrupalVersionDetector::VERSION_7:
+                return true;
+            case DrupalVersionDetector::NOT_DRUPAL:
+                return false;
+            default:
+                $this->logger->warning(
+                    'Unsupported Drupal version: {version}',
+                    [
+                        'version' => $version,
+                    ]
+                );
+                return false;
+        }
     }
 }
