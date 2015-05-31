@@ -1,5 +1,5 @@
 <?php
-namespace Devbot\Plugins\Site\Install;
+namespace Devbot\Site\Install;
 
 use Devbot\Install\AbstractInstaller;
 use Devbot\Install\ArchiveCompressorInterface;

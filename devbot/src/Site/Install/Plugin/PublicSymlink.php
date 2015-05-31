@@ -1,5 +1,5 @@
 <?php
-namespace Devbot\Plugins\Site\Install\Plugin;
+namespace Devbot\Site\Install\Plugin;
 
 use Devbot\Install\Plugin\PluginEnvironment;
 use Devbot\Install\Plugin\AbstractPlugin;

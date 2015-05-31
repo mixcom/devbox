@@ -1,5 +1,5 @@
 <?php
-namespace Devbot\Plugins\Site\Console\Command;
+namespace Devbot\Site\Console\Command;
 
 use Devbot\Install\InstallerInterface;
 
@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 
 
-class InstallCommand extends Command
+class ArchiveCommand extends Command
 {
     const OPT_DIR                = 'dir';
     const OPT_ARCHIVE            = 'archive';
@@ -29,19 +29,19 @@ class InstallCommand extends Command
     protected function configure()
     {
         $this
-            ->setName('install')
-            ->setDescription('Install all local content to get a site working and ready for development')
+            ->setName('archive')
+            ->setDescription('Archive all local content to be able to share its state, or to restore it later')
             ->addArgument(
                 self::OPT_DIR,
                 InputArgument::OPTIONAL,
-                'Install the site located in this directory',
+                'Archive the site located in this directory',
                 self::DEFAULT_DIR
             )
             ->addOption(
                 self::OPT_ARCHIVE,
                 'a',
                 InputOption::VALUE_REQUIRED,
-                'Install a specific archive',
+                'Assign this name to the archive',
                 self::DEFAULT_ARCHIVE
             )
         ;
@@ -53,7 +53,7 @@ class InstallCommand extends Command
         $this->installer->setLogger($logger);
         
         $this->configureInstallerFromInput($this->installer, $input);
-        $this->installer->install();
+        $this->installer->archive();
     }
     
     public function configureInstallerFromInput(

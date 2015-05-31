@@ -1,5 +1,5 @@
 <?php
-namespace Devbot\Plugins\Site\VcsClone;
+namespace Devbot\Site\VcsClone;
 
 use Symfony\Component\Process\ProcessBuilder;
 use Symfony\Component\Process\Process;

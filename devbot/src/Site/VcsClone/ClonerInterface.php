@@ -1,5 +1,5 @@
 <?php
-namespace Devbot\Plugins\Site\VcsClone;
+namespace Devbot\Site\VcsClone;
 
 use Psr\Log\LoggerAwareInterface;
 

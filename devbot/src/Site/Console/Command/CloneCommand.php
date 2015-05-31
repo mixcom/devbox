@@ -1,8 +1,7 @@
 <?php
-namespace Devbot\Plugins\Site\Console\Command;
+namespace Devbot\Site\Console\Command;
 
-use Devbot\Install\InstallerInterface;
-use Devbot\Plugins\Site\VcsClone\ClonerInterface;
+use Devbot\Site\VcsClone\ClonerInterface;
 
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
@@ -11,19 +10,16 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Logger\ConsoleLogger;
 
-class SetupCommand extends Command
+class CloneCommand extends Command
 {
     const OPT_SOURCE             = 'source';
     const OPT_TARGET             = 'target';
     const OPT_DIR                = 'dir';
     const OPT_BRANCH             = 'branch';
-    const OPT_ARCHIVE            = 'archive';
     
     const DEFAULT_DIR            = '/var/www/sites';
-    const DEFAULT_ARCHIVE        = 'develop';
     
     protected $cloner;
-    protected $installer;
     
     public function setCloner(ClonerInterface $cloner)
     {
@@ -31,18 +27,12 @@ class SetupCommand extends Command
         return $this;
     }
     
-    public function setInstaller(InstallerInterface $installer)
-    {
-        $this->installer = $installer;
-        return $this;
-    }
-    
     protected function configure()
     {
         $this
-            ->setName('setup')
+            ->setName('clone')
             ->setDescription(
-                'Clone a website and set it up (same as running clone + install)'
+                'Create a local clone of a website from a Git repository'
             )
             ->addArgument(
                 self::OPT_SOURCE,
@@ -67,28 +57,15 @@ class SetupCommand extends Command
                 InputOption::VALUE_REQUIRED,
                 'Clone a specific branch of the repository'
             )
-            ->addOption(
-                self::OPT_ARCHIVE,
-                'a',
-                InputOption::VALUE_REQUIRED,
-                'Install a specific archive',
-                self::DEFAULT_ARCHIVE
-            )
         ;
     }
     
     public function execute(InputInterface $input, OutputInterface $output)
     {
-        $logger = new ConsoleLogger($output);
+        $this->cloner->setLogger(new ConsoleLogger($output));
         
-        $this->cloner->setLogger($logger);
-        $this->installer->setLogger($logger);
-        
-        $target = $this->configureClonerFromInput($this->cloner, $input);
-        $this->configureInstallerFromInput($this->installer, $input, $target);
-        
+        $this->configureClonerFromInput($this->cloner, $input);
         $this->cloner->runClone();
-        $this->installer->install();
     }
     
     public function configureClonerFromInput(
@@ -102,7 +79,7 @@ class SetupCommand extends Command
         
         if ($target === null) {
             $dir = $input->getOption(self::OPT_DIR);
-            $target = $cloner->deriveTargetFromSourceInDirectory($dir);
+            $cloner->deriveTargetFromSourceInDirectory($dir);
         } else {
             $cloner->setTarget($target);
         }
@@ -110,21 +87,6 @@ class SetupCommand extends Command
         $branch = $input->getOption(self::OPT_BRANCH);
         if ($branch !== null) {
             $cloner->setBranch($input->getOption(self::OPT_BRANCH));
-        }
-        
-        return $target;
-    }
-    
-    public function configureInstallerFromInput(
-        InstallerInterface $installer, 
-        InputInterface $input,
-        $directory
-    ) {
-        $installer->setDirectory($directory);
-        
-        $archive = $input->getOption(self::OPT_ARCHIVE);
-        if ($archive !== null) {
-            $installer->setArchive($archive);
         }
     }
 }

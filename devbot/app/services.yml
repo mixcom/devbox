@@ -13,31 +13,31 @@ services:
       - [add, ["@site.command.setup"]]
       
   site.command.clone:
-    class: Devbot\Plugins\Site\Console\Command\CloneCommand
+    class: Devbot\Site\Console\Command\CloneCommand
     calls:
       - [setCloner, ["@site.clone.gitCloner"]]
     
   site.clone.gitCloner:
-    class: Devbot\Plugins\Site\VcsClone\GitCloner
+    class: Devbot\Site\VcsClone\GitCloner
   
   site.command.install:
-    class: Devbot\Plugins\Site\Console\Command\InstallCommand
+    class: Devbot\Site\Console\Command\InstallCommand
     calls:
       - [setInstaller, ["@site.installer"]]
   
   site.command.archive:
-    class: Devbot\Plugins\Site\Console\Command\ArchiveCommand
+    class: Devbot\Site\Console\Command\ArchiveCommand
     calls:
       - [setInstaller, ["@site.installer"]]
   
   site.command.setup:
-    class: Devbot\Plugins\Site\Console\Command\SetupCommand
+    class: Devbot\Site\Console\Command\SetupCommand
     calls:
       - [setCloner, ["@site.clone.gitCloner"]]
       - [setInstaller, ["@site.installer"]]
   
   site.installer:
-    class: Devbot\Plugins\Site\Install\SiteInstaller
+    class: Devbot\Site\Install\SiteInstaller
     calls:
       - [setArchiveCompressor, ["@site.install.archiveCompressor"]]
       - [addPlugin, ["public-symlink", "@site.install.publicSymlink"]]
@@ -45,10 +45,10 @@ services:
       - [addPlugin, ["drupal-files", "@drupal.install.files"]]
   
   site.install.publicSymlink:
-    class: Devbot\Plugins\Site\Install\Plugin\PublicSymlink
+    class: Devbot\Site\Install\Plugin\PublicSymlink
   
   site.install.htaccessTemplate:
-    class: Devbot\Plugins\Site\Install\Plugin\HtaccessTemplate
+    class: Devbot\Site\Install\Plugin\HtaccessTemplate
   
   site.install.archiveCompressor:
     class: Devbot\Install\ArchiveZipCompressor
