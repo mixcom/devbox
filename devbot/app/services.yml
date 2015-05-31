@@ -54,5 +54,5 @@ services:
     class: Devbot\Install\ArchiveZipCompressor
     
   drupal.install.files:
-    class: Devbot\Plugins\Drupal\Install\Plugin\Files
+    class: Devbot\Plugin\Drupal\Install\Plugin\Files
 

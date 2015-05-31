@@ -1,5 +1,5 @@
 <?php
-namespace Devbot\Plugins\Drupal\Install\Plugin;
+namespace Devbot\Plugin\Drupal\Install\Plugin;
 
 use Devbot\Install\Filesystem\Helper as FilesystemHelper;
 use Devbot\Install\Plugin\AbstractPlugin;
