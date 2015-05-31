@@ -65,6 +65,10 @@ class ArchiveZipCompressor implements ArchiveCompressorInterface
     {
         $this->prepareEmptyUncompressedDirectory();
         
+        if (!$this->compressedFileExists()) {
+            throw new \RuntimeException('Archive does not exist');
+        }
+        
         $fs = $this->getMountManager();
         $fsHelper = new FilesystemHelper($fs);
         
@@ -101,12 +105,24 @@ class ArchiveZipCompressor implements ArchiveCompressorInterface
     
     protected function prepareEmptyAvailableCompressedPath()
     {
+        list ($fs, $name) = $this->_compressedDirectoryFilesystem();
+        if ($fs->has($name)) {
+            $fs->delete($name);
+        }
+    }
+    
+    protected function compressedFileExists()
+    {
+        list ($fs, $name) = $this->_compressedDirectoryFilesystem();
+        return $fs->has($name);
+    }
+    
+    private function _compressedDirectoryFilesystem()
+    {
         $path = $this->getFullCompressedPath();
         $name = basename($path);
         $dir = dirname($path);
         $fs = new Filesystem(new Local($dir));
-        if ($fs->has($name)) {
-            $fs->delete($name);
-        }
+        return [$fs, $name];
     }
 }
