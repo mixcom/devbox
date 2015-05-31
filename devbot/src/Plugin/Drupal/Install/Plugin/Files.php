@@ -6,6 +6,9 @@ use Devbot\Install\Filesystem\Helper as FilesystemHelper;
 use Devbot\Install\Plugin\AbstractPlugin;
 use Devbot\Install\Plugin\PluginEnvironment;
 
+use Symfony\Component\Process\ProcessBuilder;
+
+
 class Files extends AbstractPlugin
 {
     const DEFAULT_FILES_DIRECTORY = 'public/sites/default/files';
@@ -35,6 +38,12 @@ class Files extends AbstractPlugin
             return;
         }
         
+        $this->copyFiles($env);
+        $this->prepareFilesPermissions($env);
+    }
+    
+    public function copyFiles(PluginEnvironment $env)
+    {
         $fs = $env->getMountManager();
         $fsHelper = new FilesystemHelper($fs);
         
@@ -45,6 +54,21 @@ class Files extends AbstractPlugin
         $this->logger->info('Copying Drupal user files');
         
         $fsHelper->copyDirectory($source, $target);
+    }
+    
+    public function prepareFilesPermissions(PluginEnvironment $env)
+    {
+        $filesDirectory = $env->getSiteDirectory()
+            . DIRECTORY_SEPARATOR
+            . self::DEFAULT_FILES_DIRECTORY;
+        
+        $processBuilder = new ProcessBuilder([
+            'chmod', '-R', '777', $filesDirectory
+        ]);
+        $process = $processBuilder->getProcess();
+        
+        $this->logger->info('Setting permissions on Drupal files');
+        $process->run();
     }
     
     protected function isSupportedDrupalVersion(PluginEnvironment $env)
