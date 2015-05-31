@@ -2,3 +2,4 @@
 tmp_table_size		= 256M
 max_heap_table_size	= 512M
 bind-address = 0.0.0.0
+user = devbox
