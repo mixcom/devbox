@@ -166,6 +166,49 @@ class PhpSettingsEditorTest extends PHPUnit_Framework_TestCase
         );
     }
     
+    public function testReadsEmptyEditorCorrectly() {
+        $editor = new PhpSettingsEditor();
+        
+        $this->assertEquals([], $editor->getOriginalConstants());
+        $this->assertEquals([], $editor->getOriginalVariables());
+    }
+    
+    /**
+     * @dataProvider changeSettingsDataProvider
+     */
+    public function testChangesEmptyEditorConstantsCorrectly(
+        $data,
+        array $constants,
+        array $variables
+    ) {
+        $editor = new PhpSettingsEditor();
+        $editor->setModifiedConstants($constants);
+        
+        $modified = $editor->getModifiedScript();
+        
+        $editor = new PhpSettingsEditor($modified);
+        
+        $this->assertEquals($constants, $editor->getOriginalConstants());
+    }
+    
+    /**
+     * @dataProvider changeSettingsDataProvider
+     */
+    public function testChangesEmptyEditorVariablesCorrectly(
+        $data,
+        array $constants,
+        array $variables
+    ) {
+        $editor = new PhpSettingsEditor();
+        $editor->setModifiedVariables($variables);
+        
+        $modified = $editor->getModifiedScript();
+        
+        $editor = new PhpSettingsEditor($modified);
+        
+        $this->assertEquals($variables, $editor->getOriginalVariables());
+    }
+    
     public function readSettingsDataProvider()
     {
         $testData = [];
@@ -202,6 +245,39 @@ class PhpSettingsEditorTest extends PHPUnit_Framework_TestCase
     }
     
     public function changeSettingsDataProvider()
+    {
+        $testData = [];
+        
+        $modifications = [];
+        $modifications[] = [
+            [
+                'NEW_CONSTANT' => true,
+                'SCHAAP' => 'modified',
+            ],
+            [
+                '__newVar' => [1, 2, 3],
+                'base_url' => 'changed',
+            ],
+        ];
+        
+        foreach ($this->readSettingsDataProvider() as $testDataItem) {
+            foreach ($modifications as $modification) {
+                list ($constantMods, $variableMods) = $modification;
+                
+                $testData[] = [
+                    $testDataItem[0],
+                    $constantMods,
+                    $variableMods,
+                    array_merge($testDataItem[1], $constantMods),
+                    array_merge($testDataItem[2], $variableMods),
+                ];
+            }
+        }
+        
+        return $testData;
+    }
+    
+    public function createSettingsDataProvider()
     {
         $testData = [];
         

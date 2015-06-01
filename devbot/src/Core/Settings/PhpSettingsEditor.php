@@ -68,13 +68,21 @@ class PhpSettingsEditor
     /**
      * Create a settings editor for the specified script
      * 
-     * @param string $scriptData Source code of the script, including <?php tag
+     * @param string|null $scriptData Source code of the script, including <?php tag,
+     *                                or null for an empty script
      */
-    public function __construct($scriptData)
+    public function __construct($scriptData = null)
     {
         $this->modifiedConstants = [];
         $this->modifiedVariables = [];
-        $this->importScriptData($scriptData);
+        
+        if ($scriptData !== null) {
+            $this->importScriptData($scriptData);
+        } else {
+            $this->originalScriptData = "<?php\n\n";
+            $this->originalConstants = [];
+            $this->originalVariables = [];
+        }
     }
     
     /**
