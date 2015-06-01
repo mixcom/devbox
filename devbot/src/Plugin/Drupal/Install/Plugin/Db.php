@@ -64,8 +64,6 @@ class Db extends AbstractPlugin
         
         // run it
         $backupProcess->run();
-        var_dump($backupProcess->getOutput());
-        exit;
     }
     
     public function install(PluginEnvironment $env)
