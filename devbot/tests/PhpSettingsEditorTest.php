@@ -7,7 +7,7 @@ class PhpSettingsEditorTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider readSettingsDataProvider
      */
-    public function testReadsConstantsCorrectly(
+    public function testReadsConstants(
         $data, 
         array $constants, 
         array $variables
@@ -19,7 +19,7 @@ class PhpSettingsEditorTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider readSettingsDataProvider
      */
-    public function testReadsVariablesCorrectly(
+    public function testReadsVariables(
         $data, 
         array $constants, 
         array $variables
@@ -31,7 +31,7 @@ class PhpSettingsEditorTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider changeSettingsDataProvider
      */
-    public function testChangesConstantsDataCorrectly(
+    public function testChangesConstantsData(
         $data, 
         array $constantModifications,
         array $variableModifications,
@@ -47,7 +47,7 @@ class PhpSettingsEditorTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider changeSettingsDataProvider
      */
-    public function testChangesVariablesDataCorrectly(
+    public function testChangesVariablesData(
         $data, 
         array $constantModifications,
         array $variableModifications,
@@ -63,7 +63,7 @@ class PhpSettingsEditorTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider changeSettingsDataProvider
      */
-    public function testChangesConstantsCorrectly(
+    public function testChangesConstants(
         $data, 
         array $constantModifications,
         array $variableModifications,
@@ -82,7 +82,7 @@ class PhpSettingsEditorTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider changeSettingsDataProvider
      */
-    public function testChangesVariablesCorrectly(
+    public function testChangesVariables(
         $data, 
         array $constantModifications,
         array $variableModifications,
@@ -101,7 +101,7 @@ class PhpSettingsEditorTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider changeSettingsDataProvider
      */
-    public function testChangesConstantsTwiceCorrectly(
+    public function testChangesConstantsTwice(
         $data, 
         array $constantModifications,
         array $variableModifications,
@@ -135,7 +135,7 @@ class PhpSettingsEditorTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider changeSettingsDataProvider
      */
-    public function testChangesVariablesTwiceCorrectly(
+    public function testChangesVariablesTwice(
         $data, 
         array $constantModifications,
         array $variableModifications,
@@ -166,7 +166,7 @@ class PhpSettingsEditorTest extends PHPUnit_Framework_TestCase
         );
     }
     
-    public function testReadsEmptyEditorCorrectly() {
+    public function testReadsEmptyEditor() {
         $editor = new PhpSettingsEditor();
         
         $this->assertEquals([], $editor->getOriginalConstants());
@@ -176,7 +176,7 @@ class PhpSettingsEditorTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider changeSettingsDataProvider
      */
-    public function testChangesEmptyEditorConstantsCorrectly(
+    public function testChangesEmptyEditorConstants(
         $data,
         array $constants,
         array $variables
@@ -194,7 +194,7 @@ class PhpSettingsEditorTest extends PHPUnit_Framework_TestCase
     /**
      * @dataProvider changeSettingsDataProvider
      */
-    public function testChangesEmptyEditorVariablesCorrectly(
+    public function testChangesEmptyEditorVariables(
         $data,
         array $constants,
         array $variables
