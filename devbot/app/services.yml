@@ -44,6 +44,7 @@ services:
       - [addPlugin, ["@site.install.htaccessTemplate"]]
       - [addPlugin, ["@drupal.install.settings"]]
       - [addPlugin, ["@drupal.install.files"]]
+      - [addPlugin, ["@drupal.install.db"]]
   
   site.install.publicSymlink:
     class: Devbot\Site\Install\Plugin\PublicSymlink
@@ -59,4 +60,16 @@ services:
     
   drupal.install.files:
     class: Devbot\Plugin\Drupal\Install\Plugin\Files
+    
+  drupal.install.db:
+    class: Devbot\Plugin\Drupal\Install\Plugin\Db
+    calls:
+      - [addDbSettingsEditor, ["@drupal.db.settingsEditor.d6"]]
+      - [addDbSettingsEditor, ["@drupal.db.settingsEditor.d7"]]
+  
+  drupal.db.settingsEditor.d6:
+    class: Devbot\Plugin\Drupal\Db\DbSettingsEditorD6
+  
+  drupal.db.settingsEditor.d7:
+    class: Devbot\Plugin\Drupal\Db\DbSettingsEditorD7
 
