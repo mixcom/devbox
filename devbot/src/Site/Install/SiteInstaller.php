@@ -97,6 +97,8 @@ class SiteInstaller extends AbstractInstaller
         
         $this->invokePlugins('archive');
         
+        $this->logger->info('Compressing {archive}', ['archive' => $this->archive]);
+        
         $this->archiveCompressor->compress();
         $this->archiveCompressor->removeUncompressedDirectory();
     }

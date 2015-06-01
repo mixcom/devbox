@@ -63,6 +63,12 @@ class Db extends AbstractPlugin
         $backupProcess = $this->getMysqldumpProcess($mysqlSettings, $dumpFile);
         
         // run it
+        $this->logger->info(
+            'Archiving database {db}', 
+            [
+                'db' => $mysqlSettings->getDatabase(),
+            ]
+        );
         $backupProcess->run();
     }
     
