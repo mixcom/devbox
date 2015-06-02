@@ -6,8 +6,6 @@ use Devbot\Install\Filesystem\Helper as FilesystemHelper;
 use Devbot\Install\Plugin\AbstractPlugin;
 use Devbot\Install\Plugin\PluginEnvironment;
 
-use Symfony\Component\Process\ProcessBuilder;
-
 
 class Files extends AbstractPlugin
 {
