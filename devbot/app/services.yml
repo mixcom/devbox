@@ -43,11 +43,15 @@ services:
     calls:
       - [setProcessBuilder, ["@processbuilder"]]
       - [setArchiveCompressor, ["@site.install.archiveCompressor"]]
+      - [addPlugin, ["@site.install.composerInstall"]]
       - [addPlugin, ["@site.install.publicSymlink"]]
       - [addPlugin, ["@site.install.htaccessTemplate"]]
       - [addPlugin, ["@drupal.install.settings"]]
       - [addPlugin, ["@drupal.install.files"]]
       - [addPlugin, ["@drupal.install.db"]]
+  
+  site.install.composerInstall:
+    class: Devbot\Site\Install\Plugin\ComposerInstall
   
   site.install.publicSymlink:
     class: Devbot\Site\Install\Plugin\PublicSymlink
