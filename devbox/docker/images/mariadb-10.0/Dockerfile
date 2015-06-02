@@ -8,6 +8,9 @@ RUN apt-get -y update
 RUN DEBIAN_FRONTEND=noninteractive apt-get -y install mariadb-server-10.0
 
 RUN rm -rf /var/lib/mysql
+RUN rm -rf /var/log/mysql
+RUN mkdir /var/log/mysql
+RUN chown -R devbox:staff /var/run/mysqld/ /var/log/mysql
 
 RUN mkdir /etc/service/mysql
 ADD mysql.runit /etc/service/mysql/run
@@ -17,7 +20,7 @@ RUN mkdir /etc/service/mysql-init
 ADD mysql-init.runit /etc/service/mysql-init/run
 ADD security.sql /etc/service/mysql-init/security.sql
 
-ADD mysql.cnf /etc/mysql/conf.d/devbox.cnf
-RUN chmod 644 /etc/mysql/conf.d/devbox.cnf
+ADD mysql.cnf /etc/mysql/my.cnf
+RUN chmod 644 /etc/mysql/my.cnf
 
 EXPOSE 3306

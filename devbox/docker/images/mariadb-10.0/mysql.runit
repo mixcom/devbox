@@ -6,7 +6,7 @@ exec 2>&1
 
 if [ ! -d "/var/lib/mysql" ]; then
   mkdir /var/lib/mysql
-	chown -R mysql:mysql /var/lib/mysql
+	chown -R devbox:mysql /var/lib/mysql
 fi
 
 # prepopulate the DB if no DB files are present
