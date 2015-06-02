@@ -13,6 +13,8 @@ interface ArchiveCompressorInterface extends LoggerAwareInterface
     
     function removeUncompressedDirectory();
     
+    function hasArchive();
+    
     function compress();
     
     function uncompress();

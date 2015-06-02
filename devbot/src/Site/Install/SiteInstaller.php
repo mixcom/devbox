@@ -7,6 +7,8 @@ use Devbot\Install\Plugin\PluginEnvironment;
 use Devbot\Install\Plugin\PluginInterface;
 
 use Psr\Log\LoggerAwareTrait;
+use Symfony\Component\Process\ProcessBuilder;
+
 
 class SiteInstaller extends AbstractInstaller
 {
@@ -70,16 +72,28 @@ class SiteInstaller extends AbstractInstaller
     {
         $this->validate();
         
+        $this->configureArchiveCompressor($this->archiveCompressor);
+        
+        $logMessage = 'Installing {directory}';
+        if ($this->archiveCompressor->hasArchive()) {
+            $this->archiveCompressor->uncompress();
+            $logMessage = 'Installing {directory} from {archive}';
+        } else {
+            $this->logger->warning(
+                'Archive {archive} not found', 
+                [
+                    'archive' => $this->archive,
+                ]
+            );
+        }
+        
         $this->logger->info(
-            'Installing {directory} from {archive}',
+            $logMessage,
             [
                 'directory' => $this->directory,
                 'archive' => $this->archive,
             ]
         );
-        
-        $this->configureArchiveCompressor($this->archiveCompressor);
-        $this->archiveCompressor->uncompress();
         
         $this->invokePlugins('install');
         
