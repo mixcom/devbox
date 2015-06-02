@@ -2,6 +2,7 @@
 namespace Devbot\Site\Console\Command;
 
 use Devbot\Install\InstallerInterface;
+use Devbot\Install\ConsoleQuestionManager;
 use Devbot\Site\VcsClone\ClonerInterface;
 
 use Symfony\Component\Console\Command\Command;
@@ -87,6 +88,9 @@ class SetupCommand extends Command
         $target = $this->configureClonerFromInput($this->cloner, $input);
         $this->configureInstallerFromInput($this->installer, $input, $target);
         
+        $questionManager = $this->getQuestionManager($input, $output);
+        $this->installer->setQuestionManager($questionManager);
+        
         $this->cloner->runClone();
         $this->installer->install();
     }
@@ -125,6 +129,21 @@ class SetupCommand extends Command
         $archive = $input->getOption(self::OPT_ARCHIVE);
         if ($archive !== null) {
             $installer->setArchive($archive);
+        }
+    }
+    
+    public function getQuestionManager(
+        InputInterface $input, 
+        OutputInterface $output
+    ) {
+        $questionHelper = $this->getHelper('question');
+        if ($questionHelper !== null) {
+          $questionManager = new ConsoleQuestionManager($questionHelper);
+          $questionManager
+            ->setInput($input)
+            ->setOutput($output)
+          ;
+          return $questionManager;
         }
     }
 }
