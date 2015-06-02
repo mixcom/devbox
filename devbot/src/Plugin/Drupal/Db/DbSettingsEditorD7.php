@@ -76,6 +76,7 @@ class DbSettingsEditorD7 extends DbPhpFileSettingsEditor
         }
         $databaseSettings['database'] = $settings->getDatabase();
         $databaseSettings['prefix'] = $settings->getPrefix();
+        $databaseSettings['driver'] = 'mysql';
         
         $databases['default']['default'] = $databaseSettings;
         
