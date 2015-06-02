@@ -1,6 +1,8 @@
 <?php
 namespace Devbot\Install\Plugin;
 
+use Devbot\Install\QuestionManagerInterface;
+
 use League\Flysystem\Filesystem;
 use League\Flysystem\MountManager;
 use League\Flysystem\Adapter\Local;
@@ -16,6 +18,7 @@ class PluginEnvironment
     protected $siteDirectory;
     protected $dumpDirectory;
     protected $processBuilder;
+    protected $questionManager;
     
     public function getSiteDirectory()
     {
@@ -49,6 +52,17 @@ class PluginEnvironment
             self::PREFIX_DUMP => $this->getDumpFilesystem(),
         ]);
         return $manager;
+    }
+    
+    public function setQuestionManager(QuestionManagerInterface $questionManager)
+    {
+        $this->questionManager = $questionManager;
+        return $this;
+    }
+    
+    public function getQuestionManager()
+    {
+        return $this->questionManager;
     }
     
     public function __construct(

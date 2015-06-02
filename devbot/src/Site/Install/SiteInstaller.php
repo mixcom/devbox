@@ -3,6 +3,7 @@ namespace Devbot\Site\Install;
 
 use Devbot\Install\AbstractInstaller;
 use Devbot\Install\ArchiveCompressorInterface;
+use Devbot\Install\QuestionManagerInterface;
 use Devbot\Install\Plugin\PluginEnvironment;
 use Devbot\Install\Plugin\PluginInterface;
 
@@ -20,6 +21,7 @@ class SiteInstaller extends AbstractInstaller
     protected $plugins;
     protected $installerDirectory;
     protected $archiveCompressor;
+    protected $questionManager;
     
     public function setProcessBuilder(ProcessBuilder $builder)
     {
@@ -30,6 +32,12 @@ class SiteInstaller extends AbstractInstaller
     public function setInstallerDirectory($directory)
     {
         $this->installerDirectory = $directory;
+    }
+    
+    public function setQuestionManager(QuestionManagerInterface $manager)
+    {
+        $this->questionManager = $manager;
+        return $this;
     }
     
     public function setPlugins(array $plugins)
@@ -150,6 +158,8 @@ class SiteInstaller extends AbstractInstaller
             $dumpDirectory,
             $processBuilder
         );
+        
+        $env->setQuestionManager($this->questionManager);
         
         return $env;
     }
