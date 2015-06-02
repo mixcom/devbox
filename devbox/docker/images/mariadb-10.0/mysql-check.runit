@@ -5,6 +5,6 @@ if [ "$RESULT" = "" ]; then
 fi
 RESULT=`echo "select 'test';" | mysql -pmixcom 2>&1`
 case "$RESULT" in
-  *ERROR 2005*) exit 1 ;;
+  *ERROR\ 2005*) exit 1 ;;
 esac
 exit 0
