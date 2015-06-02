@@ -8,7 +8,10 @@ use Devbot\Install\Plugin\PluginEnvironment;
 class Settings extends AbstractPlugin
 {
     const DEFAULT_SETTINGS_FILE = 'public/sites/default/settings.php';
-    const DEFAULT_SETTINGS_TEMPLATE = 'public/sites/default/default.settings.php';
+    const DEFAULT_SETTINGS_GLOBAL_TEMPLATE = 
+        'public/sites/default/default.settings.php';
+    const DEFAULT_SETTINGS_SITE_TEMPLATE = 
+        'public/sites/default/template.settings.php';
     
     public function getPluginId()
     {
@@ -25,13 +28,25 @@ class Settings extends AbstractPlugin
         if ($fs->has(self::DEFAULT_SETTINGS_FILE)) {
             return;
         }
-        if (!$fs->has(self::DEFAULT_SETTINGS_TEMPLATE)) {
-            $this->logger->warning('No default.settings.php found');
+        $paths = [
+            self::DEFAULT_SETTINGS_SITE_TEMPLATE, 
+            self::DEFAULT_SETTINGS_GLOBAL_TEMPLATE
+        ];
+        
+        $templatePath = null;
+        foreach ($paths as $path) {
+            if ($fs->has($path)) {
+                $templatePath = $path;
+                break;
+            }
+        }
+        if ($templatePath === null) {
+            $this->logger->warning('No settings.php template found');
             return;
         }
         
         $this->logger->info('Creating settings file from template');
-        $fs->copy(self::DEFAULT_SETTINGS_TEMPLATE, self::DEFAULT_SETTINGS_FILE);
+        $fs->copy($templatePath, self::DEFAULT_SETTINGS_FILE);
     }
     
     protected function isSupportedDrupalVersion(PluginEnvironment $env)
