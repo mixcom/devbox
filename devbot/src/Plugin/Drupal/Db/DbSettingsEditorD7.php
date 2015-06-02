@@ -54,7 +54,34 @@ class DbSettingsEditorD7 extends DbPhpFileSettingsEditor
      */
     function setMysqlSettings(MysqlSettings $settings)
     {
+        $editor = $this->getPhpSettingsEditor();
+        if (!$editor) {
+            throw new \RuntimeException('Can\'t edit settings');
+        }
         
+        $variables = $editor->getOriginalVariables();
+        $databases = [];
+        if (isset ($variables['databases'])) {
+            $databases = $variables['databases'];
+        }
+        if (!isset ($databases['default']['default'])) {
+            $databases['default']['default'] = [];
+        }
+        $databaseSettings = $databases['default']['default'];
+        $databaseSettings['host'] = $settings->getHost();
+        $databaseSettings['username'] = $settings->getUsername();
+        $databaseSettings['password'] = $settings->getPassword();
+        if ($port = $settings->getPort()) {
+            $databaseSettings['port'] = $port;
+        }
+        $databaseSettings['database'] = $settings->getDatabase();
+        $databaseSettings['prefix'] = $settings->getPrefix();
+        
+        $databases['default']['default'] = $databaseSettings;
+        
+        $editor->setModifiedVariables(['databases' => $databases]);
+        
+        $this->writeSettingsFromEditor($editor);
     }
     
     /**

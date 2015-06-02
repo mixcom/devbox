@@ -45,4 +45,22 @@ abstract class DbPhpFileSettingsEditor implements DbSettingsEditorInterface
         
         return $settingsEditor;
     }
+    
+    public function writeSettingsFromEditor(
+        PhpSettingsEditor $settingsEditor, 
+        $path = null
+    ) {
+        if ($path === null) {
+            $path = self::DEFAULT_SETTINGS_PATH;
+        }
+        
+        $fs = $this->siteFilesystem;
+        $scriptData = $settingsEditor->getModifiedScript();
+        
+        if ($fs->has($path)) {
+            $fs->update($path, $scriptData);
+        } else {
+            $fs->write($path, $scriptData);
+        }
+    }
 }
