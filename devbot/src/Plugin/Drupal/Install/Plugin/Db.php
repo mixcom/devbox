@@ -43,12 +43,20 @@ class Db extends AbstractPlugin
     
     public function archive(PluginEnvironment $env)
     {
-        $mysqlSettings = $this->getMysqlSettingsForEnvironment($env);
+        $versionDetector = new DrupalVersionDetector();
+        $version = $versionDetector->detectMajorVersion($env->getSiteFilesystem());
         
-        if ($mysqlSettings === null) {
+        if ($version === DrupalVersionDetector::NOT_DRUPAL) {
             return;
         }
-        if (!$mysqlSettings->getHost() || !$mysqlSettings->getDatabase()) {
+        
+        $mysqlSettings = $this->getMysqlSettingsForEnvironment($env, $version);
+        
+        if ($mysqlSettings === null) {
+            $this->logger->warning('Can\'t archive Drupal DB: no MySQL settings');
+            return;
+        }
+        if (!$this->checkMysqlSettingsComplete($mysqlSettings)) {
             $this->logger->warning(
                 'Can\'t archive Drupal DB: incomplete DB settings'
             );
@@ -60,7 +68,11 @@ class Db extends AbstractPlugin
         
         // get the dump process
         $dumpFile = $env->getDumpDirectory() . DIRECTORY_SEPARATOR . 'db.sql';
-        $backupProcess = $this->getMysqldumpProcess($mysqlSettings, $dumpFile);
+        $backupProcess = $this->getMysqldumpProcess(
+            $env->getProcessBuilder(),
+            $mysqlSettings, 
+            $dumpFile
+        );
         
         // run it
         $this->logger->info(
@@ -77,33 +89,17 @@ class Db extends AbstractPlugin
         $versionDetector = new DrupalVersionDetector();
         $version = $versionDetector->detectMajorVersion($env->getSiteFilesystem());
         
-        switch ($version) {
-            case DrupalVersionDetector::NOT_DRUPAL:
-                // skip
-                return;
-            case DrupalVersionDetector::VERSION_6:
-                break;
-            case DrupalVersionDetector::VERSION_7:
-                break;
-            default:
-                $this->logger->warning(
-                    'Unsupported Drupal version: {version}',
-                    [
-                        'version' => $version,
-                    ]
-                );
-        }
-    }
-    
-    public function getMysqlSettingsForEnvironment(PluginEnvironment $env)
-    {
-        $versionDetector = new DrupalVersionDetector();
-        $version = $versionDetector->detectMajorVersion($env->getSiteFilesystem());
-        
         if ($version === DrupalVersionDetector::NOT_DRUPAL) {
             return;
         }
         
+        $mysqlSettings = $this->getMysqlSettingsForEnvironment($env, $version);
+        
+        // TODO
+    }
+    
+    public function getMysqlSettingsForEnvironment(PluginEnvironment $env, $version)
+    {
         $settingsEditor = $this->getDbSettingsEditorForVersion($version);
         if ($settingsEditor === null) {
             $this->logger->warning(
@@ -118,19 +114,22 @@ class Db extends AbstractPlugin
         $settingsEditor->setSiteFilesystem($env->getSiteFilesystem());
         $mysqlSettings = $settingsEditor->getMysqlSettings();
         
-        if (!$mysqlSettings) {
-            $this->logger->warning('Can\'t archive Drupal DB: no MySQL settings');
-        }
-        
         return $mysqlSettings;
     }
     
+    public function checkMysqlSettingsComplete(MysqlSettings $mysqlSettings)
+    {
+        return $mysqlSettings->getHost() !== null
+            && $mysqlSettings->getDatabase() !== null;
+    }
+    
     public function getMysqldumpProcess(
+        ProcessBuilder $processBuilder,
         MysqlSettings $mysqlSettings, 
         $dumpFile = null
     ) {
         $args = $this->getMysqldumpProcessArgs($mysqlSettings, $dumpFile);
-        $processBuilder = new ProcessBuilder($args);
+        $processBuilder->setArguments($args);
         return $processBuilder->getProcess();
     }
     
