@@ -6,7 +6,7 @@ RUN apt-key adv --recv-keys --keyserver hkp://keyserver.ubuntu.com:80 0xcbcb082a
 RUN add-apt-repository 'deb http://mirror.stshosting.co.uk/mariadb/repo/10.0/ubuntu trusty main'
 RUN apt-get -y update
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install libcurl4-openssl-dev libcurl3 libyaml-dev php5 php5-mhash php5-mcrypt php5-curl php5-cli php5-mysql php5-gd php5-intl php-pear php5-dev php5-fpm php5-memcache mariadb-client-10.0
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y install libcurl4-openssl-dev libcurl3 libyaml-dev php5 php5-mhash php5-mcrypt php5-curl php5-cli php5-mysql php5-gd php5-intl php-pear php5-dev php5-fpm php5-memcache mariadb-client-10.0 ruby1.9.1-dev libsqlite3-dev
 
 RUN yes | pecl install yaml
 RUN echo "extension=yaml.so" >> /etc/php5/mods-available/yaml.ini
@@ -21,6 +21,10 @@ ADD www.conf /etc/php5/fpm/pool.d/www.conf
 RUN mkdir /etc/service/php-fpm
 ADD php-fpm.runit /etc/service/php-fpm/run
 ADD php-fpm-check.runit /etc/service/php-fpm/check
+
+RUN gem install mailcatcher --no-rdoc --no-ri &&\
+    sed -i -e "s/.*sendmail_path =.*/sendmail_path = \/usr\/bin\/env catchmail --smtp-ip mailcatcher -f address@example\.com/" /etc/php5/fpm/php.ini &&\
+    sed -i -e "s/.*sendmail_path =.*/sendmail_path = \/usr\/bin\/env catchmail --smtp-ip mailcatcher -f address@example\.com/" /etc/php5/cli/php.ini
 
 RUN curl -sS https://getcomposer.org/installer | php
 RUN mv composer.phar /usr/local/bin/composer
