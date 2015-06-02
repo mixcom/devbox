@@ -51,7 +51,6 @@ class SiteInstaller extends AbstractInstaller
     
     public function addPlugin(PluginInterface $plugin)
     {
-        $id = $plugin->getPluginId();
         $this->plugins[] = $plugin;
     }
     
