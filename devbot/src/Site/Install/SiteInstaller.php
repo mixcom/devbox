@@ -19,6 +19,12 @@ class SiteInstaller extends AbstractInstaller
     protected $installerDirectory;
     protected $archiveCompressor;
     
+    public function setProcessBuilder(ProcessBuilder $builder)
+    {
+        $this->processBuilder = $builder;
+        return $this;
+    }
+    
     public function setInstallerDirectory($directory)
     {
         $this->installerDirectory = $directory;
@@ -122,7 +128,14 @@ class SiteInstaller extends AbstractInstaller
         $siteDirectory = $this->getDirectoryRealpath();
         $dumpDirectory = $this->getDumpDirectoryForPlugin($id);
         
-        $env = new PluginEnvironment($siteDirectory, $dumpDirectory);
+        $processBuilder = clone $this->processBuilder;
+        $processBuilder->setWorkingDirectory($siteDirectory);
+        
+        $env = new PluginEnvironment(
+            $siteDirectory, 
+            $dumpDirectory,
+            $processBuilder
+        );
         
         return $env;
     }

@@ -5,6 +5,7 @@ use Symfony\Component\Process\ProcessBuilder;
 use Symfony\Component\Process\Process;
 use Psr\Log\LoggerAwareTrait;
 
+
 class GitCloner implements ClonerInterface
 {
     use LoggerAwareTrait;
@@ -12,6 +13,14 @@ class GitCloner implements ClonerInterface
     protected $source;
     protected $target;
     protected $branch;
+    
+    protected $processBuilder;
+    
+    public function setProcessBuilder(ProcessBuilder $builder)
+    {
+        $this->processBuilder = $builder;
+        return $this;
+    }
     
     public function setSource($source)
     {
@@ -96,7 +105,8 @@ class GitCloner implements ClonerInterface
         $args[] = $this->source;
         $args[] = $this->target;
         
-        $builder = new ProcessBuilder($args);
+        $builder = $this->processBuilder;
+        $builder->setArguments($args);
         $process = $builder->getProcess();
         return $process;
     }

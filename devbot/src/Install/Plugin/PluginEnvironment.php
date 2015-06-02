@@ -5,6 +5,9 @@ use League\Flysystem\Filesystem;
 use League\Flysystem\MountManager;
 use League\Flysystem\Adapter\Local;
 
+use Symfony\Component\Process\ProcessBuilder;
+
+
 class PluginEnvironment
 {
     const PREFIX_SITE = 'site';
@@ -12,6 +15,7 @@ class PluginEnvironment
     
     protected $siteDirectory;
     protected $dumpDirectory;
+    protected $processBuilder;
     
     public function getSiteDirectory()
     {
@@ -33,6 +37,11 @@ class PluginEnvironment
         return new Filesystem(new Local($this->getDumpDirectory()));
     }
     
+    public function getProcessBuilder()
+    {
+        return $this->processBuilder;
+    }
+    
     public function getMountManager()
     {
         $manager = new MountManager([
@@ -44,9 +53,11 @@ class PluginEnvironment
     
     public function __construct(
         $siteDirectory, 
-        $dumpDirectory
+        $dumpDirectory,
+        ProcessBuilder $builder
     ) {
         $this->siteDirectory = $siteDirectory;
         $this->dumpDirectory = $dumpDirectory;
+        $this->processBuilder = $builder;
     }
 }

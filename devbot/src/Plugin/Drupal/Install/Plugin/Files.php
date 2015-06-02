@@ -67,9 +67,8 @@ class Files extends AbstractPlugin
             . DIRECTORY_SEPARATOR
             . self::DEFAULT_FILES_DIRECTORY;
         
-        $processBuilder = new ProcessBuilder([
-            'chmod', '-R', '777', $filesDirectory
-        ]);
+        $processBuilder = $env->getProcessBuilder();
+        $processBuilder->setArguments(['chmod', '-R', '777', $filesDirectory]);
         $process = $processBuilder->getProcess();
         
         $this->logger->info('Setting permissions on Drupal files');
