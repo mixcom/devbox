@@ -41,3 +41,10 @@ docker exec devbox-php rsync -a /devbox/config/ssh-keys/ /root/.ssh
 echo "- Apache 2.4:"
 docker run -d --name devbox-apache -v $ROOTDIR:/var/www --link devbox-php:php -p 80:80 mixcom/devbox-apache-2.4
 echo "Started all Docker containers."
+if [ -d "$WEBUIDIR" ]; then
+  echo "Creating devbox web UI"
+  git clone https://github.com/mixcom/devbox-web-ui.git "$WEBUIDIR"
+  
+  cd "$WEBUIDIR" && composer install --prefer-dist --no-dev --optimize-autoloader
+fi
+
