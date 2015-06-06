@@ -9,6 +9,8 @@ use Devbot\Plugin\Drupal\VersionDetector;
  */
 class DbSettingsEditorD6 extends DbPhpFileSettingsEditor
 {
+    const DEFAULT_DB_URL = 'mysql://username:password@localhost/databasename';
+    
     /**
      * {@inheritdoc}
      */
@@ -29,6 +31,11 @@ class DbSettingsEditorD6 extends DbPhpFileSettingsEditor
         
         if (isset ($variables['db_prefix'])) {
             $output->setPrefix($variables['db_prefix']);
+        }
+        
+        if ($variables['db_url'] == self::DEFAULT_DB_URL) {
+            // this is the Drupal 6 default setting, return nothing
+            return $output;
         }
         
         $dbUrl = $variables['db_url'];
