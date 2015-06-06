@@ -400,6 +400,9 @@ class Db extends AbstractPlugin
         $thresholdFraction = 0.9;
         
         $numTables = sizeof($tables);
+        if ($numTables == 0) {
+            return '';
+        }
         
         $lengths = array_map('strlen', $tables);
         $minLength = min($lengths);
