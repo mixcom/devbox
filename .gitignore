@@ -1,0 +1,6 @@
+config/ssh-keys/*
+.vagrant/
+data/
+sites/
+tmp/
+
