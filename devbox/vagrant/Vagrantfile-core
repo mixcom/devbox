@@ -18,7 +18,7 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.provision "docker"
   
   # put Docker on a TCP port
-  config.vm.provision "shell", inline: "/vagrant/devbox/vagrant/provision.sh"
+  config.vm.provision "shell", inline: "/vagrant/devbox/vagrant/provision/provision.sh"
   
   # run the Docker containers
   config.vm.provision "shell", inline: "/vagrant/devbox/docker/run"
