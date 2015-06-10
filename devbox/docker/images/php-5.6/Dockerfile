@@ -31,6 +31,9 @@ RUN mv composer.phar /usr/local/bin/composer
 RUN composer global require drush/drush:6.*
 ADD bashrc /root/.bashrc
 
+ADD php.ini /etc/php5/mods-available/devbox.ini
+RUN php5enmod devbox
+
 VOLUME /devbox
 VOLUME /var/www/sites
 
