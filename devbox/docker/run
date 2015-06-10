@@ -42,3 +42,4 @@ docker run -d --name devbox-apache -v $ROOTDIR:/var/www --link devbox-php:php -p
 echo "- phpMyAdmin:"
 docker run -d --name devbox-phpmyadmin -p 8081:443 --link devbox-mysql:mysql marvambass/phpmyadmin
 echo "Started all Docker containers."
+echo "Devbox is up and running."
