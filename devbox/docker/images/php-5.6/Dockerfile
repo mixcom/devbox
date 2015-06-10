@@ -22,6 +22,9 @@ RUN mkdir /etc/service/php-fpm
 ADD php-fpm.runit /etc/service/php-fpm/run
 ADD php-fpm-check.runit /etc/service/php-fpm/check
 
+RUN mkdir /etc/service/devbox-install
+ADD devbox-install.runit /etc/service/devbox-install/run
+
 RUN curl -sS https://getcomposer.org/installer | php
 RUN mv composer.phar /usr/local/bin/composer
 

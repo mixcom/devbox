@@ -1,0 +1,4 @@
+#!/bin/sh
+rsync -a /devbox/config/ssh-keys/ /root/.ssh
+[ -f /devbox/config/crontab ] && cp /devbox/config/crontab /etc/cron.d/devbox
+sleep infinity
