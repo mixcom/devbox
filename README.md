@@ -82,6 +82,7 @@ Devbox runs PHP 5.6 (with other versions to follow). Features include:
 * cURL extension
 * `composer`
 * `drush`
+* Mailcatcher (mail sent from PHP will not arrive at its destination, but goes here: see below)
 
 PHP is run by PHP-FPM. It can access MySQL at the hostname `mysql`, using the credentials specified below.
 
@@ -108,6 +109,12 @@ You can access phpMyAdmin at the following URL:
     https://192.168.33.11:8081
     
 (Mind the `https`, not `http`!) The MySQL credentials can be found above.
+
+## Mailcatcher
+
+When you send mail from PHP, it goes to the Mailcatcher interface. This allows you to easily debug PHP mailings. Mailcatcher can be found at:
+
+    http://192.168.33.11:1080
 
 ## Memcached
 
