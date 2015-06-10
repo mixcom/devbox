@@ -39,4 +39,6 @@ echo "- PHP 5.6:"
 docker run -d --name devbox-php -v $ROOTDIR:/devbox -v $SITESDIR:/var/www/sites --link devbox-memcache:memcache --link devbox-mysql:mysql mixcom/devbox-php-5.6
 echo "- Apache 2.4:"
 docker run -d --name devbox-apache -v $ROOTDIR:/var/www --link devbox-php:php -p 80:80 mixcom/devbox-apache-2.4
+echo "- phpMyAdmin:"
+docker run -d --name devbox-phpmyadmin -p 8081:443 --link devbox-mysql:mysql marvambass/phpmyadmin
 echo "Started all Docker containers."
