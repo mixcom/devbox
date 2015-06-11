@@ -51,5 +51,6 @@ if ! [ -d "$WEBUIDIR/public" ]; then
   echo "Creating devbox web UI"
   git clone https://github.com/mixcom/devbox-web-ui.git "$WEBUIDIR"
   
-  cd "$WEBUIDIR" && composer install --prefer-dist --no-dev --optimize-autoloader
+  # Installing Web UI dependencies
+  docker exec devbox-php /bin/sh -c "cd /var/www/web-ui && composer install --prefer-dist --no-dev --optimize-autoloader --no-interaction"
 fi
