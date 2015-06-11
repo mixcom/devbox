@@ -1,0 +1,2 @@
+export PATH="$HOME/.composer/vendor/bin:$PATH"
+export TERM=xterm
