@@ -75,7 +75,7 @@ Apache connects to PHP using FastCGI over TCP.
 
 ## PHP
 
-Devbox runs PHP 5.6 (with other versions to follow). Features include:
+Devbox runs PHP 5.6, by default, but 5.5 and 5.3 are also available (see below). Features include:
 
 * Xdebug extension
 * Memcache extension
@@ -123,6 +123,18 @@ There is a memcached daemon running which can be accessed from PHP at the hostna
 ## Apache Solr
 
 Apache Solr is not yet supported, but will be soon.
+
+## Switching versions
+
+Running another PHP version is very simple: create a file `config/versions` and add one of the following lines:
+
+    PHP=5.3
+    PHP=5.5
+    PHP=5.6
+
+Then run `vagrant provision` or `devbox/docker/run` to activate the selected version.
+
+If the versions file is not present, PHP 5.6 is used.
 
 # The Devbox management shell
 
