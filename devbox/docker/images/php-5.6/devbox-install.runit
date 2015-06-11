@@ -1,0 +1,16 @@
+#!/bin/sh
+rsync -a /devbox/config/ssh-keys/ /root/.ssh
+
+if [ -f /devbox/config/crontab ]; then
+  cp /devbox/config/crontab /etc/cron.d/devbox
+  sv restart cron
+fi
+
+if [ -f /devbox/config/php.ini ]; then
+  cp /devbox/config/php.ini /etc/php5/mods-available/devbox-user.ini
+  ln -s /etc/php5/mods-available/devbox-user.ini /etc/php5/fpm/conf.d/30-devbox-user.ini
+  ln -s /etc/php5/mods-available/devbox-user.ini /etc/php5/cli/conf.d/30-devbox-user.ini
+  sv restart php-fpm
+fi
+
+sleep infinity

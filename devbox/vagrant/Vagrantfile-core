@@ -3,6 +3,7 @@ VAGRANTFILE_API_VERSION = "2"
 Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   config.vm.box = "ubuntu/trusty64"
 
+  config.vm.synced_folder ".", "/vagrant", type: "nfs", mount_options: ["nolock,vers=3,udp,noatime,actimeo=1"]
   config.vm.network "private_network", ip: "192.168.33.11"
   
   config.vm.provider "virtualbox" do |vb|
@@ -16,6 +17,9 @@ Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
   # install Docker
   config.vm.provision "docker"
   
+  # put Docker on a TCP port
+  config.vm.provision "shell", inline: "/vagrant/devbox/vagrant/provision/provision.sh"
+  
   # run the Docker containers
-  config.vm.provision "shell", inline: "/vagrant/devbox/docker/run"
+  config.vm.provision "shell", inline: "/vagrant/devbox/docker/run", run: "always"
 end

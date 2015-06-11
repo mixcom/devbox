@@ -1,1 +1,9 @@
+config/ssh-keys/*
+config/php.ini
+config/crontab
+config/Vagrantfile
+.vagrant/
+data/
+sites/
+tmp/
 devbox/web-ui

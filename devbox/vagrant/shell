@@ -1,2 +1,4 @@
 #!/bin/sh
-exec vagrant ssh -c "docker exec -it devbox-php /bin/bash"
+DIR=`dirname $0`
+$DIR/docker exec -it devbox-php /bin/bash
+
