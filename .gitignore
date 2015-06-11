@@ -2,6 +2,7 @@ config/ssh-keys/*
 config/php.ini
 config/crontab
 config/Vagrantfile
+config/versions
 .vagrant/
 data/
 sites/
