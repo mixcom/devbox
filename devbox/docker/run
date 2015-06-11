@@ -47,7 +47,7 @@ docker run -d --name devbox-phpmyadmin -p 8081:443 --link devbox-mysql:mysql mar
 echo "Started all Docker containers."
 echo "Devbox is up and running."
 
-if ! [ -d "$WEBUIDIR" ]; then
+if ! [ -d "$WEBUIDIR/public" ]; then
   echo "Creating devbox web UI"
   git clone https://github.com/mixcom/devbox-web-ui.git "$WEBUIDIR"
   
