@@ -9,9 +9,13 @@ if [ ! -d "/var/lib/mysql" ]; then
 	chown -R devbox:mysql /var/lib/mysql
 fi
 
+USER=`stat -c "%u" /var/lib/mysql`
+
 # prepopulate the DB if no DB files are present
 if [ ! -d "/var/lib/mysql/mysql" ]; then
-	/usr/bin/mysql_install_db --defaults-file=$DEFAULTS
+	/usr/bin/mysql_install_db --user=$USER --defaults-file=$DEFAULTS
 fi
+
+chown -R 0777 /var/lib/mysql
 
 exec /usr/bin/mysqld_safe --defaults-file=$DEFAULTS > /dev/null
