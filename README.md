@@ -201,7 +201,7 @@ You can set custom php.ini directives by creating a file `config/php.ini`. Every
 
     vagrant provision
 
-You *can not* set PHP configuration directives in your `.htaccess` files, because we use FastCGI.
+You *can not* set PHP configuration directives like `php_value` or `php_flag` in your `.htaccess` files, because we use FastCGI. The way to go is to set the directives using `ini_set()` or in `config/php.ini`. If the directives need to stay in the `.htaccess` for compatibility reasons, wrap them in a `<IfModule mod_php5.c>` block.
 
 ## Cron jobs
 
