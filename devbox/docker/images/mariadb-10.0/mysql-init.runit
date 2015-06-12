@@ -1,4 +1,5 @@
 #!/bin/sh
 sv -w 20 start mysql
+sleep 5
 mysql -uroot < /etc/service/mysql-init/security.sql
 exec sleep infinity
