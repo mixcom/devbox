@@ -20,5 +20,6 @@ ADD bashrc /root/.bashrc
 
 VOLUME /devbox
 VOLUME /var/www/sites
+VOLUME /var/www/apps
 
 EXPOSE 9000

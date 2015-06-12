@@ -1,8 +1,8 @@
 FROM mixcom/devbox-base
 MAINTAINER Sebastiaan Besselsen <sebastiaan.besselsen@gmail.com>
 
-VOLUME /var/www
-VOLUME /var/scratch
+VOLUME /var/www/sites
+VOLUME /var/www/apps
 EXPOSE 80
 
 RUN add-apt-repository "deb http://archive.ubuntu.com/ubuntu trusty multiverse"

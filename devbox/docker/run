@@ -21,10 +21,17 @@ fi
 ROOTDIR=`realpath "$ROOTDIR"`
 SITESDIR="$ROOTDIR/sites"
 MYSQLDIR="$ROOTDIR/data/mysql"
+APPSDIR="$ROOTDIR/devbox/apps"
+WEBUIDIR="$APPSDIR/default"
 
 if ! [ -d "$MYSQLDIR" ]; then
   echo "Creating directory $MYSQLDIR"
   mkdir -p $MYSQLDIR
+fi
+
+if ! [ -d "$APPSDIR" ]; then
+  echo "Creating directory $APPSDIR"
+  mkdir -p $APPSDIR
 fi
 
 PHP="5.6"
@@ -45,10 +52,18 @@ docker run -d --name devbox-memcache memcached
 echo "- Mailcatcher:"
 docker run -d -p 1080:1080 --name devbox-mailcatcher alexisno/mailcatcher-dev
 echo "- PHP $PHP_VERSION:"
-docker run -d --name devbox-php -v $ROOTDIR:/devbox -v $SITESDIR:/var/www/sites --link devbox-memcache:memcache --link devbox-mysql:mysql --link devbox-mailcatcher:mailcatcher mixcom/devbox-php-$PHP_VERSION
+docker run -d --name devbox-php -v $ROOTDIR:/devbox -v $APPSDIR:/var/www/apps -v $SITESDIR:/var/www/sites --link devbox-memcache:memcache --link devbox-mysql:mysql --link devbox-mailcatcher:mailcatcher mixcom/devbox-php-$PHP_VERSION
 echo "- Apache 2.4:"
-docker run -d --name devbox-apache -v $ROOTDIR:/var/www --link devbox-php:php -p 80:80 mixcom/devbox-apache-2.4
+docker run -d --name devbox-apache -v $APPSDIR:/var/www/apps -v $SITESDIR:/var/www/sites --link devbox-php:php -p 80:80 mixcom/devbox-apache-2.4
 echo "- phpMyAdmin:"
 docker run -d --name devbox-phpmyadmin -p 8081:443 --link devbox-mysql:mysql marvambass/phpmyadmin
 echo "Started all Docker containers."
 echo "Devbox is up and running."
+
+if ! [ -d "$WEBUIDIR/public" ]; then
+  echo "Creating Devbox web UI"
+  git clone https://github.com/mixcom/devbox-web-ui.git "$WEBUIDIR"
+  
+  # Installing Web UI dependencies
+  docker exec devbox-php /bin/sh -c "cd /var/www/apps/default && composer install --prefer-dist --no-dev --optimize-autoloader --no-interaction"
+fi

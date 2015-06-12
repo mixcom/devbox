@@ -33,5 +33,6 @@ ADD run.sh /usr/local/devbox-run.sh
 
 VOLUME /devbox
 VOLUME /var/www/sites
+VOLUME /var/www/apps
 EXPOSE 9000
 ENTRYPOINT /usr/local/devbox-run.sh
