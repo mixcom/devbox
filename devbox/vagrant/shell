@@ -1,6 +1,6 @@
 #!/bin/sh
 DIR=`dirname $0`
-if [ "`command -v "docker2"`" != "" ]; then
+if [ "`command -v "docker"`" != "" ]; then
   $DIR/docker exec -it devbox-php /bin/bash
 else
   exec vagrant ssh -c "docker exec -it devbox-php /bin/bash"
