@@ -234,3 +234,23 @@ Since Devbox is entirely Docker-based, you can run the Devbox containers directl
 If you have a working Docker environment, simple run `./devbox/docker/run` to start the Devbox containers. (This is exactly what the Vagrant box does internally!)
 
 Using Devbox directly with Docker could be a lot faster, because Docker can access local files directly (through volumes) instead of requiring shared folders or NFS. However, this is only the case if you use Docker on Linux. Using Devbox within [boot2docker](http://boot2docker.io/) also works, but it may actually be slower than using our Vagrant box. The reason is that boot2docker doesn't support NFS yet, and our box does. This can make a noticeable difference in projects with lots of small files.
+
+# Common problems
+
+## NFS error messages
+
+Devbox uses NFS to improve performance. This requires that you have nfsd installed on your system. This is the default on OS X, but on Linux you may have to install it manually.
+
+Nfsd does not work well on encrypted volumes. This may result in the following error message:
+
+```
+exportfs: Warning: /exports does not support NFS export.
+```
+
+The solution is to run Devbox from a non-encrypted directory. If that's not possible, then comment out this line in `devbox/vagrant/Vagrantfile-core`:
+
+```ruby
+#config.vm.synced_folder ".", "/vagrant", type: "nfs", mount_options: ["nolock,vers=3,udp,noatime,actimeo=1"]
+```
+
+By commenting it out, you will disable NFS and fall back to VirtualBox file sharing. It's slower, but it should work.
