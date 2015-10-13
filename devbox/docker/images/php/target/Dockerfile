@@ -1,7 +1,7 @@
 FROM mixcom/devbox-php-versioned
 MAINTAINER Sebastiaan Besselsen <sebastiaan.besselsen@gmail.com>
 
-RUN DEBIAN_FRONTEND=noninteractive apt-get -y install php5 php5-mhash php5-mcrypt php5-curl php5-cli php5-mysql php5-gd php5-intl php-pear php5-dev php5-fpm php5-memcache php5-xdebug php5-imagick
+RUN DEBIAN_FRONTEND=noninteractive apt-get -y install php5 php5-mhash php5-mcrypt php5-curl php5-cli php5-mysql php5-gd php5-intl php-pear php5-dev php5-fpm php5-memcache php5-xdebug php5-imagick php5-ssh2
 
 RUN yes | pecl install yaml
 RUN echo "extension=yaml.so" >> /etc/php5/mods-available/yaml.ini
