@@ -54,7 +54,7 @@ docker run -d -p 1080:1080 --name devbox-mailcatcher alexisno/mailcatcher-dev
 echo "- PHP $PHP_VERSION:"
 docker run -d --name devbox-php -v $ROOTDIR:/devbox -v $APPSDIR:/var/www/apps -v $SITESDIR:/var/www/sites --link devbox-memcache:memcache --link devbox-mysql:mysql --link devbox-mailcatcher:mailcatcher mixcom/devbox-php-$PHP_VERSION
 echo "- Apache 2.4:"
-docker run -d --name devbox-apache -v $APPSDIR:/var/www/apps -v $SITESDIR:/var/www/sites --link devbox-php:php -p 80:80 mixcom/devbox-apache-2.4
+docker run -d --name devbox-apache -v $APPSDIR:/var/www/apps -v $SITESDIR:/var/www/sites --link devbox-php:php -p 80:80 -p 8043:443 mixcom/devbox-apache-2.4
 echo "- phpMyAdmin:"
 docker run -d --name devbox-phpmyadmin -p 8081:443 --link devbox-mysql:mysql marvambass/phpmyadmin
 echo "Started all Docker containers."
