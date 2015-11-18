@@ -239,7 +239,11 @@ Using Devbox directly with Docker could be a lot faster, because Docker can acce
 
 ## NFS error messages
 
-Devbox uses NFS to improve performance. This requires that you have nfsd installed on your system. This is the default on OS X, but on Linux you may have to install it manually.
+Devbox uses NFS to improve performance. This requires that you have nfsd installed on your system. This is the default on OS X, but on Linux you may have to install it manually:
+
+```
+sudo apt-get install nfs-kernel-server
+```
 
 Nfsd does not work well on encrypted volumes. This may result in the following error message:
 
